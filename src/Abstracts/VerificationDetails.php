@@ -2,6 +2,9 @@
 
 namespace JincorTech\VerifyClient\Abstracts;
 
+use InvalidArgumentException;
+use JincorTech\VerifyClient\ValueObjects\Uuid;
+
 /**
  * Class VerificationDetails
  *
@@ -28,15 +31,15 @@ abstract class VerificationDetails
     /**
      * VerificationDetails constructor.
      *
-     * @param string $status
-     * @param string $verificationId
-     * @param int    $expiredId
+     * @param array $data
      */
-    public function __construct(string $status, string $verificationId, int $expiredId)
+    public function __construct(array $data)
     {
-        $this->status = $status;
-        $this->verificationId = $verificationId;
-        $this->expiredOn = $expiredId;
+        $this->validateData($data, ['status', 'verificationId', 'expiredOn']);
+
+        $this->status = $data['status'];
+        $this->verificationId = new Uuid($data['verificationId']);
+        $this->expiredOn = $data['expiredOn'];
     }
 
     /**
@@ -61,5 +64,14 @@ abstract class VerificationDetails
     public function getExpiredOn(): int
     {
         return $this->expiredOn;
+    }
+
+    public function validateData(array $data, array $requiredKeys)
+    {
+        foreach ($requiredKeys as $key) {
+            if (!array_key_exists($key, $data) && !empty($data[$key])) {
+                throw new InvalidArgumentException(sprintf('%s field is required', $key));
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace JincorTech\VerifyClient\Traits;
 
 use InvalidArgumentException;
+use JincorTech\VerifyClient\Interfaces\GenerateCode;
 use JincorTech\VerifyClient\ValueObjects\Uuid;
 
 /**
@@ -137,12 +138,12 @@ trait BaseVerificationMethodTrait
      */
     public function setGenerateCode(array $symbolsSet, int $length): self
     {
-        if ($length <=self::MIN_LENGTH) {
+        if ($length <= self::MIN_LENGTH) {
             throw new InvalidArgumentException('Too short length');
         }
 
         foreach ($symbolsSet as $set) {
-            if (!is_string($set) || empty($set)) {
+            if (!is_string($set) || empty($set) || !in_array($set, GenerateCode::ALLOWABLE_VALUES)) {
                 throw new InvalidArgumentException('Invalid symbol set');
             }
         }

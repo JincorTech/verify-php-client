@@ -24,26 +24,16 @@ class GoogleAuthVerificationDetails extends VerificationDetails
     /**
      * GoogleAuthVerificationDetails constructor.
      *
-     * @param int    $status
-     * @param Uuid   $verificationId
-     * @param string $expiredId
-     * @param string $consumer
-     * @param string $totpUri
+     * @param array $data
      */
-    public function __construct(int $status, Uuid $verificationId, string $expiredId, string $consumer, string $totpUri)
+    public function __construct(array $data)
     {
-        parent::__construct($status, $verificationId, $expiredId);
+        parent::__construct($data);
 
-        if (empty($consumer)) {
-            throw new \InvalidArgumentException('Consumer is empty');
-        }
+        $this->validateData($data, ['consumer', 'totpUri']);
 
-        if (empty($totpUri)) {
-            throw new \InvalidArgumentException('Totp URI is empty');
-        }
-
-        $this->consumer = $consumer;
-        $this->totpUri = $totpUri;
+        $this->consumer = $data['consumer'];
+        $this->totpUri = $data['totpUri'];
     }
 
     /**

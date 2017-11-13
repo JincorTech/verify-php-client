@@ -118,6 +118,13 @@ class EmailVerificationVerificationMethodCest
         );
 
         $I->expectException(
+            new InvalidArgumentException('Invalid symbol set'),
+            function () use ($emailMethod) {
+                $emailMethod->setGenerateCode(['FOO', 'BAR'], 16);
+            }
+        );
+
+        $I->expectException(
             new InvalidArgumentException('Too short length'),
             function () use ($emailMethod) {
                 $emailMethod->setGenerateCode([GenerateCode::DIGITS], 1);

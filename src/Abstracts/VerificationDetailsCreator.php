@@ -5,7 +5,6 @@ namespace JincorTech\VerifyClient\Abstracts;
 use Exception;
 use JincorTech\VerifyClient\ValueObjects\EmailVerificationDetails;
 use JincorTech\VerifyClient\ValueObjects\GoogleAuthVerificationDetails;
-use JincorTech\VerifyClient\ValueObjects\Uuid;
 
 /**
  * Class VerificationDetailsCreator
@@ -27,20 +26,9 @@ abstract class VerificationDetailsCreator
     {
         switch ($methodType) {
             case 'email':
-                return new EmailVerificationDetails(
-                    $data['status'],
-                    new Uuid($data['verificationId']),
-                    $data['expiredOn'],
-                    0
-                );
+                return new EmailVerificationDetails($data);
             case 'google_auth':
-                return new GoogleAuthVerificationDetails(
-                    $data['status'],
-                    new Uuid($data['verificationId']),
-                    $data['expiredOn'],
-                    $data['consumer'],
-                    $data['totpUri']
-                );
+                return new GoogleAuthVerificationDetails($data);
             default:
                 throw new Exception('Unsupported method type');
                 break;
