@@ -5,15 +5,13 @@ namespace JincorTech\VerifyClient;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
+use JincorTech\VerifyClient\Abstracts\VerificationDetailsCreator;
 use JincorTech\VerifyClient\Abstracts\InvalidationData;
 use JincorTech\VerifyClient\Abstracts\ValidationData;
 use JincorTech\VerifyClient\Abstracts\VerificationDetails;
 use JincorTech\VerifyClient\Exceptions\InvalidCodeException;
 use JincorTech\VerifyClient\Interfaces\VerificationMethod;
 use JincorTech\VerifyClient\Interfaces\VerifyService;
-use JincorTech\VerifyClient\ValueObjects\EmailVerificationDetails;
-use JincorTech\VerifyClient\ValueObjects\GoogleAuthVerificationDetails;
-use JincorTech\VerifyClient\ValueObjects\Uuid;
 
 /**
  * Class VerifyClient
@@ -60,26 +58,7 @@ class VerifyClient implements VerifyService
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        switch ($verificationMethod->getMethodType()) {
-        case 'email':
-            return new EmailVerificationDetails(
-                $data['status'],
-                new Uuid($data['verificationId']),
-                $data['expiredOn'],
-                0
-            );
-        case 'google_auth':
-            return new GoogleAuthVerificationDetails(
-                $data['status'],
-                new Uuid($data['verificationId']),
-                $data['expiredOn'],
-                $data['consumer'],
-                $data['totpUri']
-            );
-        default:
-            throw new Exception('Unsupported method');
-                break;
-        }
+        return VerificationDetailsCreator::create($verificationMethod->getMethodType(), $data);
     }
 
 
@@ -97,8 +76,8 @@ class VerifyClient implements VerifyService
         try {
             $this->httpClient->request(
                 'POST', '/methods/'
-                .$validationData->getMethodType().'/verifiers/'
-                .$validationData->getVerificationId().'/actions/validate',
+                    .$validationData->getMethodType().'/verifiers/'
+                    .$validationData->getVerificationId().'/actions/validate',
                 [
                     'json' => $validationData->getRequestParameters(),
                 ]
