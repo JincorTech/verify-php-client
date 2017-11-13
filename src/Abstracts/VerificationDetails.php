@@ -66,6 +66,12 @@ abstract class VerificationDetails
         return $this->expiredOn;
     }
 
+    /**
+     * @param array $data
+     * @param array $requiredKeys
+     *
+     * @throws InvalidArgumentException
+     */
     public function validateData(array $data, array $requiredKeys)
     {
         foreach ($requiredKeys as $key) {

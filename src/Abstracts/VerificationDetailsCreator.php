@@ -31,7 +31,6 @@ abstract class VerificationDetailsCreator
                 return new GoogleAuthVerificationDetails($data);
             default:
                 throw new Exception('Unsupported method type');
-                break;
         }
     }
 }
