@@ -149,7 +149,7 @@ trait BaseVerificationMethodTrait
 
         $this->generateCode = [
             'symbolSet' => $symbolsSet,
-            'length' => $length,
+            'length'    => $length,
         ];
 
         return $this;
@@ -163,7 +163,7 @@ trait BaseVerificationMethodTrait
         $parameters = [
             'consumer' => $this->consumer,
             'template' => $this->template,
-            'policy' => $this->policy,
+            'policy'   => $this->policy,
         ];
 
         if ($this->generateCode) {

@@ -61,7 +61,7 @@ class GoogleAuthValidationData extends ValidationData
     public function getRequestParameters(): array
     {
         return [
-            'code' => $this->code,
+            'code'         => $this->code,
             'removeSecret' => $this->removeSecret,
         ];
     }
