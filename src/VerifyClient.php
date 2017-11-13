@@ -84,11 +84,7 @@ class VerifyClient implements VerifyService
             );
         } catch (ClientException $clientException) {
             if ($clientException->getCode() === 422) {
-                $detail = json_decode($clientException->getResponse()->getBody()->getContents(), true);
-                throw new InvalidCodeException(
-                    'Invalid Code',
-                    0
-                );
+                throw new InvalidCodeException('Invalid Code');
             }
 
             throw $clientException;

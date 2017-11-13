@@ -84,7 +84,6 @@ class VerifyClientCest
         $responseBody = json_encode([
             'status' => 200,
             'verificationId' => $this->verificationId->getValue(),
-            'attempts' => 0,
             'expiredOn' => 123456
         ]);
 
@@ -175,12 +174,11 @@ class VerifyClientCest
         $responseBody = json_encode([
             'status' => 422,
             'error' => 'Invalid code',
-            'attempts' => 1
         ]);
 
         $this->addResponseToHandler($responseBody, 422);
 
-        $I->expectException(new InvalidCodeException('Invalid Code', 1), function () {
+        $I->expectException(new InvalidCodeException('Invalid Code'), function () {
             $this->verifyClient->validate(
                 new EmailValidationData(
                     $this->verificationId,
@@ -321,12 +319,11 @@ class VerifyClientCest
         $responseBody = json_encode([
             'status' => 422,
             'error' => 'Invalid code',
-            'attempts' => 1
         ]);
 
         $this->addResponseToHandler($responseBody, 422);
 
-        $I->expectException(new InvalidCodeException('Invalid Code', 1), function () {
+        $I->expectException(new InvalidCodeException('Invalid Code'), function () {
             $this->verifyClient->validate(
                 new GoogleAuthValidationData(
                     $this->verificationId,
