@@ -1,37 +1,35 @@
 <?php
 
-namespace JincorTech\VerifyClient\Abstracts;
+namespace JincorTech\VerifyClient\ValueObjects;
 
 use InvalidArgumentException;
-use JincorTech\VerifyClient\ValueObjects\Uuid;
 
 /**
- * Class VerificationDetails
+ * Class VerificationResult
  *
- * @package JincorTech\VerifyClient\Abstracts
+ * @package JincorTech\VerifyClient\ValueObjects
  */
-abstract class VerificationDetails
+class VerificationResult
 {
     /**
      * @var string
      */
-    protected $status;
+    private $status;
 
     /**
      * @var string
      */
-    protected $verificationId;
+    private $consumer;
+
+    /**
+     * @var string
+     */
+    private $verificationId;
 
     /**
      * @var integer
      */
-    protected $expiredOn;
-
-    /**
-     * @var string
-     */
-    protected $consumer;
-
+    private $expiredOn;
 
     /**
      * VerificationDetails constructor.
@@ -40,15 +38,18 @@ abstract class VerificationDetails
      */
     public function __construct(array $data)
     {
-        $this->validateData($data, ['status', 'verificationId', 'expiredOn', 'consumer']);
+        $this->validateData($data, ['status', 'data']);
+        $this->validateData($data['data'], ['verificationId', 'consumer', 'expiredOn']);
 
         $this->status = $data['status'];
-        $this->verificationId = new Uuid($data['verificationId']);
-        $this->expiredOn = $data['expiredOn'];
-        $this->consumer = $data['consumer'];
+        $this->consumer = $data['data']['consumer'];
+        $this->verificationId = $data['data']['verificationId'];
+        $this->expiredOn = $data['data']['expiredOn'];
     }
 
     /**
+     * Status
+     *
      * @return string
      */
     public function getStatus(): string
@@ -57,6 +58,18 @@ abstract class VerificationDetails
     }
 
     /**
+     * Consumer
+     *
+     * @return string
+     */
+    public function getConsumer(): string
+    {
+        return $this->consumer;
+    }
+
+    /**
+     * ValidationId
+     *
      * @return string
      */
     public function getVerificationId(): string
@@ -65,19 +78,13 @@ abstract class VerificationDetails
     }
 
     /**
+     * ExpiredOn
+     *
      * @return int
      */
     public function getExpiredOn(): int
     {
         return $this->expiredOn;
-    }
-
-    /**
-     * @return string
-     */
-    public function getConsumer(): string
-    {
-        return $this->consumer;
     }
 
     /**

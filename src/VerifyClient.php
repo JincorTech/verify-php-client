@@ -12,6 +12,7 @@ use JincorTech\VerifyClient\Abstracts\VerificationDetails;
 use JincorTech\VerifyClient\Exceptions\InvalidCodeException;
 use JincorTech\VerifyClient\Interfaces\VerificationMethod;
 use JincorTech\VerifyClient\Interfaces\VerifyService;
+use JincorTech\VerifyClient\ValueObjects\VerificationResult;
 
 /**
  * Class VerifyClient
@@ -67,14 +68,14 @@ class VerifyClient implements VerifyService
      *
      * @param ValidationData $validationData Validation Data
      *
-     * @return bool
+     * @return VerificationResult
      *
      * @throws InvalidCodeException
      */
-    public function validate(ValidationData $validationData): bool
+    public function validate(ValidationData $validationData): VerificationResult
     {
         try {
-            $this->httpClient->request(
+            $response = $this->httpClient->request(
                 'POST', '/methods/'
                     .$validationData->getMethodType().'/verifiers/'
                     .$validationData->getVerificationId().'/actions/validate',
@@ -82,6 +83,8 @@ class VerifyClient implements VerifyService
                     'json' => $validationData->getRequestParameters(),
                 ]
             );
+
+            return new VerificationResult(json_decode($response->getBody()->getContents(), true));
         } catch (ClientException $clientException) {
             if ($clientException->getCode() === 422) {
                 throw new InvalidCodeException('Invalid Code');
@@ -89,8 +92,6 @@ class VerifyClient implements VerifyService
 
             throw $clientException;
         }
-
-        return true;
     }
 
 

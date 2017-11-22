@@ -10,6 +10,7 @@ use GuzzleHttp\Psr7\Response;
 use JincorTech\VerifyClient\ValueObjects\EmailValidationData;
 use JincorTech\VerifyClient\ValueObjects\EmailInvalidationData;
 use JincorTech\VerifyClient\ValueObjects\EmailVerificationDetails;
+use JincorTech\VerifyClient\ValueObjects\VerificationResult;
 use JincorTech\VerifyClient\VerificationMethod\EmailVerification;
 use JincorTech\VerifyClient\Exceptions\InvalidCodeException;
 use JincorTech\VerifyClient\ValueObjects\GoogleAuthValidationData;
@@ -84,7 +85,8 @@ class VerifyClientCest
         $responseBody = json_encode([
             'status' => 200,
             'verificationId' => $this->verificationId->getValue(),
-            'expiredOn' => 123456
+            'expiredOn' => 123456,
+            'consumer' => self::CONSUMER,
         ]);
 
         $this->addResponseToHandler($responseBody, 200);
@@ -100,6 +102,7 @@ class VerifyClientCest
         $I->assertEquals('200', $verificationDetails->getStatus());
         $I->assertEquals(self::VERIFICATION_ID, $verificationDetails->getVerificationId());
         $I->assertEquals(self::VERIFICATION_EXPIRED_ON, $verificationDetails->getExpiredOn());
+        $I->assertEquals(self::CONSUMER, $verificationDetails->getConsumer());
     }
 
     public function initiateByEmailVerificationResponseCode404(UnitTester $I)
@@ -138,6 +141,11 @@ class VerifyClientCest
     {
         $responseBody = json_encode([
             'status' => 200,
+            'data' => [
+                'verificationId' => self::VERIFICATION_ID,
+                'consumer' => self::CONSUMER,
+                'expiredOn' =>  self::VERIFICATION_EXPIRED_ON
+            ]
         ]);
 
         $this->addResponseToHandler($responseBody, 200);
@@ -147,7 +155,11 @@ class VerifyClientCest
                 $this->verificationId,
                 self::VERIFICATION_CODE)
         );
-        $I->assertEquals(true, $resultValidate);
+        $I->assertInstanceOf(VerificationResult::class, $resultValidate);
+        $I->assertEquals(self::CONSUMER, $resultValidate->getConsumer());
+        $I->assertEquals(self::VERIFICATION_EXPIRED_ON, $resultValidate->getExpiredOn());
+        $I->assertEquals(self::VERIFICATION_ID, $resultValidate->getVerificationId());
+        $I->assertEquals(200, $resultValidate->getStatus());
     }
 
     public function validateByEmailVerificationResponseCode404(UnitTester $I)
@@ -282,6 +294,11 @@ class VerifyClientCest
     {
         $responseBody = json_encode([
             'status' => 200,
+            'data' => [
+                'verificationId' => self::VERIFICATION_ID,
+                'consumer' => self::CONSUMER,
+                'expiredOn' =>  self::VERIFICATION_EXPIRED_ON
+            ]
         ]);
 
         $this->addResponseToHandler($responseBody, 200);
@@ -292,7 +309,11 @@ class VerifyClientCest
                 self::VERIFICATION_CODE,
                 true)
         );
-        $I->assertEquals(true, $resultValidate);
+        $I->assertInstanceOf(VerificationResult::class, $resultValidate);
+        $I->assertEquals(self::CONSUMER, $resultValidate->getConsumer());
+        $I->assertEquals(self::VERIFICATION_EXPIRED_ON, $resultValidate->getExpiredOn());
+        $I->assertEquals(self::VERIFICATION_ID, $resultValidate->getVerificationId());
+        $I->assertEquals(200, $resultValidate->getStatus());
     }
 
     public function validateByGoogleAuthVerificationResponseCode404(UnitTester $I)
