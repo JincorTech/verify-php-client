@@ -58,6 +58,12 @@ class EmailVerificationVerificationMethodCest
             ($emailMethod->getRequestParameters())['policy']['expiredOn']
         );
 
+        $emailMethod->setPayload('payload_data');
+        $I->assertEquals(
+            'payload_data',
+            ($emailMethod->getRequestParameters())['payload']
+        );
+
         $emailMethod->setGenerateCode(
             [
                 GenerateCode::DIGITS,
@@ -83,28 +89,28 @@ class EmailVerificationVerificationMethodCest
         $emailMethod = new EmailVerification();
 
         $I->expectException(
-            new \InvalidArgumentException('Consumer is empty'),
+            new InvalidArgumentException('Consumer is empty'),
             function () use ($emailMethod) {
                 $emailMethod->setConsumer('');
             }
         );
 
         $I->expectException(
-            new \InvalidArgumentException('Template is empty'),
+            new InvalidArgumentException('Template is empty'),
             function () use ($emailMethod) {
                 $emailMethod->setTemplate('');
             }
         );
 
         $I->expectException(
-            new \InvalidArgumentException('ForcedCode is empty'),
+            new InvalidArgumentException('ForcedCode is empty'),
             function () use ($emailMethod) {
                 $emailMethod->setForcedCode('');
             }
         );
 
         $I->expectException(
-            new \InvalidArgumentException('ExpiredOn is empty'),
+            new InvalidArgumentException('ExpiredOn is empty'),
             function () use ($emailMethod) {
                 $emailMethod->setExpiredOn('');
             }
@@ -128,6 +134,13 @@ class EmailVerificationVerificationMethodCest
             new InvalidArgumentException('Too short length'),
             function () use ($emailMethod) {
                 $emailMethod->setGenerateCode([GenerateCode::DIGITS], 1);
+            }
+        );
+
+        $I->expectException(
+            new InvalidArgumentException('Payload is empty'),
+            function () use ($emailMethod) {
+                $emailMethod->setPayload('');
             }
         );
     }

@@ -62,6 +62,10 @@ class GoogleAuthVerification implements VerificationMethod
             $parameters['policy']['forcedCode'] = $this->forcedCode;
         }
 
+        if ($this->payload) {
+            $parameters['payload'] = $this->payload;
+        }
+
         return $parameters;
     }
 }

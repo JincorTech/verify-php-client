@@ -87,6 +87,7 @@ class VerifyClientCest
             'verificationId' => $this->verificationId->getValue(),
             'expiredOn' => 123456,
             'consumer' => self::CONSUMER,
+            'payload' => 'payload_data',
         ]);
 
         $this->addResponseToHandler($responseBody, 200);
@@ -95,7 +96,8 @@ class VerifyClientCest
         $emailMethod->setConsumer(self::CONSUMER)
             ->setTemplate(self::TEMPLATE)
             ->setForcedVerificationId($this->verificationId)
-            ->setExpiredOn(self::VERIFICATION_EXPIRED_ON);
+            ->setExpiredOn(self::VERIFICATION_EXPIRED_ON)
+            ->setPayload('payload_data');
 
         $verificationDetails = $this->verifyClient->initiate($emailMethod);
         $I->assertInstanceOf(EmailVerificationDetails::class, $verificationDetails);
@@ -103,6 +105,7 @@ class VerifyClientCest
         $I->assertEquals(self::VERIFICATION_ID, $verificationDetails->getVerificationId());
         $I->assertEquals(self::VERIFICATION_EXPIRED_ON, $verificationDetails->getExpiredOn());
         $I->assertEquals(self::CONSUMER, $verificationDetails->getConsumer());
+        $I->assertEquals('payload_data', $verificationDetails->getPayload());
     }
 
     public function initiateByEmailVerificationResponseCode404(UnitTester $I)
@@ -144,7 +147,8 @@ class VerifyClientCest
             'data' => [
                 'verificationId' => self::VERIFICATION_ID,
                 'consumer' => self::CONSUMER,
-                'expiredOn' =>  self::VERIFICATION_EXPIRED_ON
+                'expiredOn' =>  self::VERIFICATION_EXPIRED_ON,
+                'payload' => 'payload_data',
             ]
         ]);
 
@@ -160,6 +164,7 @@ class VerifyClientCest
         $I->assertEquals(self::VERIFICATION_EXPIRED_ON, $resultValidate->getExpiredOn());
         $I->assertEquals(self::VERIFICATION_ID, $resultValidate->getVerificationId());
         $I->assertEquals(200, $resultValidate->getStatus());
+        $I->assertEquals('payload_data', $resultValidate->getPayload());
     }
 
     public function validateByEmailVerificationResponseCode404(UnitTester $I)
@@ -238,7 +243,7 @@ class VerifyClientCest
             'consumer' => self::CONSUMER,
             'verificationId' => $this->verificationId->getValue(),
             'totpUri' => self::VERIFICATION_TOTP_URI,
-            'expiredOn' => 123456
+            'expiredOn' => 123456,
         ]);
 
         $this->addResponseToHandler($responseBody, 200);
@@ -256,6 +261,7 @@ class VerifyClientCest
         $I->assertEquals(self::VERIFICATION_EXPIRED_ON, $verificationDetails->getExpiredOn());
         $I->assertEquals(self::VERIFICATION_TOTP_URI, $verificationDetails->getTotpUri());
         $I->assertEquals(self::CONSUMER, $verificationDetails->getConsumer());
+        $I->assertEquals('', $verificationDetails->getPayload());
     }
 
     public function initiateByGoogleAuthVerificationResponseCode404(UnitTester $I)

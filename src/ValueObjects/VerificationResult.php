@@ -32,6 +32,11 @@ class VerificationResult
     private $expiredOn;
 
     /**
+     * @var string
+     */
+    private $payload = '';
+
+    /**
      * VerificationDetails constructor.
      *
      * @param array $data
@@ -45,6 +50,10 @@ class VerificationResult
         $this->consumer = $data['data']['consumer'];
         $this->verificationId = $data['data']['verificationId'];
         $this->expiredOn = $data['data']['expiredOn'];
+
+        if (array_key_exists('payload', $data['data'])) {
+            $this->payload = $data['data']['payload'];
+        }
     }
 
     /**
@@ -85,6 +94,14 @@ class VerificationResult
     public function getExpiredOn(): int
     {
         return $this->expiredOn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPayload(): string
+    {
+        return $this->payload;
     }
 
     /**

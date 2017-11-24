@@ -43,6 +43,11 @@ trait BaseVerificationMethodTrait
      */
     private $forcedCode;
 
+    /**
+     * @var string $payload
+     */
+    private $payload;
+
 
     /**
      * @return string
@@ -156,6 +161,23 @@ trait BaseVerificationMethodTrait
         return $this;
     }
 
+
+    /**
+     * @param string $payload
+     *
+     * @return self
+     */
+    public function setPayload(string $payload): self
+    {
+        if (empty($payload)) {
+            throw new InvalidArgumentException('Payload is empty');
+        }
+
+        $this->payload = $payload;
+
+        return $this;
+    }
+
     /**
      * @return array
      */
@@ -177,6 +199,10 @@ trait BaseVerificationMethodTrait
 
         if ($this->forcedCode) {
             $parameters['policy']['forcedCode'] = $this->forcedCode;
+        }
+
+        if ($this->payload) {
+            $parameters['payload'] = $this->payload;
         }
 
         return $parameters;

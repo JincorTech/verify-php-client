@@ -32,6 +32,11 @@ abstract class VerificationDetails
      */
     protected $consumer;
 
+    /**
+     * @var string
+     */
+    protected $payload = '';
+
 
     /**
      * VerificationDetails constructor.
@@ -46,6 +51,10 @@ abstract class VerificationDetails
         $this->verificationId = new Uuid($data['verificationId']);
         $this->expiredOn = $data['expiredOn'];
         $this->consumer = $data['consumer'];
+
+        if (array_key_exists('payload', $data)) {
+            $this->payload = $data['payload'];
+        }
     }
 
     /**
@@ -78,6 +87,14 @@ abstract class VerificationDetails
     public function getConsumer(): string
     {
         return $this->consumer;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPayload(): string
+    {
+        return $this->payload;
     }
 
     /**

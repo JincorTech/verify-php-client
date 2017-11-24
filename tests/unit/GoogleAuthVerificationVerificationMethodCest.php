@@ -75,6 +75,12 @@ class GoogleAuthVerificationVerificationMethodCest
 
         $googleAuthMethod->setIssuer('Jincor');
         $I->assertEquals('Jincor', ($googleAuthMethod->getRequestParameters())['issuer']);
+
+        $googleAuthMethod->setPayload('payload_data');
+        $I->assertEquals(
+            'payload_data',
+            ($googleAuthMethod->getRequestParameters())['payload']
+        );
     }
 
     public function setWrongParameters(UnitTester $I)
@@ -133,6 +139,13 @@ class GoogleAuthVerificationVerificationMethodCest
             new InvalidArgumentException('Issuer is empty'),
             function () use ($googleAuthMethod) {
                 $googleAuthMethod->setIssuer('');
+            }
+        );
+
+        $I->expectException(
+            new InvalidArgumentException('Payload is empty'),
+            function () use ($googleAuthMethod) {
+                $googleAuthMethod->setPayload('');
             }
         );
     }
