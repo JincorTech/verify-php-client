@@ -19,7 +19,7 @@ trait BaseVerificationMethodTrait
     private $consumer;
 
     /**
-     * @var string $template
+     * @var array[string] $template
      */
     private $template;
 
@@ -128,9 +128,7 @@ trait BaseVerificationMethodTrait
             throw new InvalidArgumentException('Template is empty');
         }
 
-        $this->template = [
-            'body' => $template,
-        ];
+        $this->template['body'] = $template;
 
         return $this;
     }
@@ -174,6 +172,54 @@ trait BaseVerificationMethodTrait
         }
 
         $this->payload = $payload;
+
+        return $this;
+    }
+
+    /**
+     * @param string $fromEmail
+     *
+     * @return self
+     */
+    public function setFromEmail(string $fromEmail): self
+    {
+        if (empty($fromEmail)) {
+            throw new InvalidArgumentException('From email is empty');
+        }
+
+        $this->template['fromEmail'] = $fromEmail;
+
+        return $this;
+    }
+
+    /**
+     * @param string $fromName
+     *
+     * @return self
+     */
+    public function setFromName(string $fromName): self
+    {
+        if (empty($fromName)) {
+            throw new InvalidArgumentException('From name is empty');
+        }
+
+        $this->template['fromName'] = $fromName;
+
+        return $this;
+    }
+
+    /**
+     * @param string $subject
+     *
+     * @return self
+     */
+    public function setSubject(string $subject): self
+    {
+        if (empty($subject)) {
+            throw new InvalidArgumentException('Subject is empty');
+        }
+
+        $this->template['subject'] = $subject;
 
         return $this;
     }

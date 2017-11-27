@@ -9,6 +9,9 @@ class GoogleAuthVerificationVerificationMethodCest
 {
     const CONSUMER = 'test@test.com';
     const TEMPLATE = '{{{CODE}}}';
+    const FROM_EMAIL = 'noreply@jincor.com';
+    const FROM_NAME = 'Robot';
+    const SUBJECT = 'Subject';
     const VERIFICATION_ID = 'd6b78279-db85-467e-b965-c938d043ffac';
     const VERIFICATION_CODE = 'boCMVNxsP6fV192zkjpNkLS8M';
     const VERIFICATION_EXPIRED_ON = '60 min';
@@ -42,6 +45,15 @@ class GoogleAuthVerificationVerificationMethodCest
 
         $googleAuthMethod->setTemplate(self::TEMPLATE);
         $I->assertEquals(self::TEMPLATE, ($googleAuthMethod->getRequestParameters())['template']['body']);
+
+        $googleAuthMethod->setFromEmail(self::FROM_EMAIL);
+        $I->assertEquals(self::FROM_EMAIL, ($googleAuthMethod->getRequestParameters())['template']['fromEmail']);
+
+        $googleAuthMethod->setFromName(self::FROM_NAME);
+        $I->assertEquals(self::FROM_NAME, ($googleAuthMethod->getRequestParameters())['template']['fromName']);
+
+        $googleAuthMethod->setSubject(self::SUBJECT);
+        $I->assertEquals(self::SUBJECT, ($googleAuthMethod->getRequestParameters())['template']['subject']);
 
         $googleAuthMethod->setForcedCode(self::VERIFICATION_CODE);
         $I->assertEquals(self::VERIFICATION_CODE, ($googleAuthMethod->getRequestParameters())['policy']['forcedCode']);
@@ -97,6 +109,27 @@ class GoogleAuthVerificationVerificationMethodCest
             new InvalidArgumentException('Template is empty'),
             function () use ($googleAuthMethod) {
                 $googleAuthMethod->setTemplate('');
+            }
+        );
+
+        $I->expectException(
+            new InvalidArgumentException('From email is empty'),
+            function () use ($googleAuthMethod) {
+                $googleAuthMethod->setFromEmail('');
+            }
+        );
+
+        $I->expectException(
+            new InvalidArgumentException('From name is empty'),
+            function () use ($googleAuthMethod) {
+                $googleAuthMethod->setFromName('');
+            }
+        );
+
+        $I->expectException(
+            new InvalidArgumentException('Subject is empty'),
+            function () use ($googleAuthMethod) {
+                $googleAuthMethod->setSubject('');
             }
         );
 
