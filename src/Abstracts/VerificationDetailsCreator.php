@@ -13,7 +13,6 @@ use JincorTech\VerifyClient\ValueObjects\GoogleAuthVerificationDetails;
  */
 abstract class VerificationDetailsCreator
 {
-
     /**
      * @param string $methodType
      * @param array $data
@@ -25,9 +24,9 @@ abstract class VerificationDetailsCreator
     public static function create(string $methodType, array $data): VerificationDetails
     {
         switch ($methodType) {
-            case 'email':
+            case VerificationMethod::METHOD_EMAIL:
                 return new EmailVerificationDetails($data);
-            case 'google_auth':
+            case VerificationMethod::METHOD_GOOGLE_AUTH:
                 return new GoogleAuthVerificationDetails($data);
             default:
                 throw new Exception('Unsupported method type');

@@ -17,11 +17,6 @@ class GoogleAuthVerificationDetails extends VerificationDetails
     private $totpUri;
 
     /**
-     * @var string $consumer
-     */
-    private $consumer;
-
-    /**
      * GoogleAuthVerificationDetails constructor.
      *
      * @param array $data
@@ -30,9 +25,12 @@ class GoogleAuthVerificationDetails extends VerificationDetails
     {
         parent::__construct($data);
 
-        $this->validateData($data, ['consumer', 'totpUri']);
+        if (array_key_exists('data', $data)) {
+            $data = $data['data'];
+        }
 
-        $this->consumer = $data['consumer'];
+        $this->validateData($data, ['totpUri']);
+
         $this->totpUri = $data['totpUri'];
     }
 
@@ -44,15 +42,5 @@ class GoogleAuthVerificationDetails extends VerificationDetails
     public function getTotpUri(): string
     {
         return $this->totpUri;
-    }
-
-    /**
-     * Consumer
-     *
-     * @return string
-     */
-    public function getConsumer(): string
-    {
-        return $this->consumer;
     }
 }
