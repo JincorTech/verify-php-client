@@ -3,7 +3,7 @@
 namespace JincorTech\VerifyClient\VerificationMethod;
 
 use InvalidArgumentException;
-use JincorTech\VerifyClient\Interfaces\VerificationMethod;
+use JincorTech\VerifyClient\Abstracts\VerificationMethod;
 use JincorTech\VerifyClient\Traits\BaseVerificationMethodTrait;
 
 /**
@@ -11,11 +11,11 @@ use JincorTech\VerifyClient\Traits\BaseVerificationMethodTrait;
  *
  * @package JincorTech\VerifyClient\ValueObjects
  */
-class GoogleAuthVerification implements VerificationMethod
+class GoogleAuthVerification extends VerificationMethod
 {
     use BaseVerificationMethodTrait;
 
-    const METHOD_TYPE = 'google_auth';
+    const METHOD_TYPE = self::METHOD_GOOGLE_AUTH;
     const MIN_LENGTH = 2;
 
     /**

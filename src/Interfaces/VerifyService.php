@@ -5,6 +5,7 @@ namespace JincorTech\VerifyClient\Interfaces;
 use JincorTech\VerifyClient\Abstracts\InvalidationData;
 use JincorTech\VerifyClient\Abstracts\ValidationData;
 use JincorTech\VerifyClient\Abstracts\VerificationDetails;
+use JincorTech\VerifyClient\Abstracts\VerificationMethod;
 use JincorTech\VerifyClient\ValueObjects\VerificationResult;
 
 /**
@@ -34,4 +35,13 @@ interface VerifyService
      * @return bool
      */
     public function invalidate(InvalidationData $invalidationData): bool;
+
+
+    /**
+     * @param string $verificationId
+     * @param string $methodType
+     *
+     * @return VerificationDetails
+     */
+    public function getVerification(string $verificationId, string $methodType): VerificationDetails;
 }

@@ -1,9 +1,9 @@
 <?php
 
+use JincorTech\VerifyClient\Abstracts\VerificationMethod;
 use JincorTech\VerifyClient\VerificationMethod\EmailVerification;
 use JincorTech\VerifyClient\Interfaces\GenerateCode;
 use JincorTech\VerifyClient\ValueObjects\Uuid;
-use JincorTech\VerifyClient\Interfaces\VerificationMethod;
 
 class EmailVerificationVerificationMethodCest
 {

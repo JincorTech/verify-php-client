@@ -25,6 +25,10 @@ class GoogleAuthVerificationDetails extends VerificationDetails
     {
         parent::__construct($data);
 
+        if (array_key_exists('data', $data)) {
+            $data = $data['data'];
+        }
+
         $this->validateData($data, ['totpUri']);
 
         $this->totpUri = $data['totpUri'];

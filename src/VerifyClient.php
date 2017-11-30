@@ -10,7 +10,7 @@ use JincorTech\VerifyClient\Abstracts\InvalidationData;
 use JincorTech\VerifyClient\Abstracts\ValidationData;
 use JincorTech\VerifyClient\Abstracts\VerificationDetails;
 use JincorTech\VerifyClient\Exceptions\InvalidCodeException;
-use JincorTech\VerifyClient\Interfaces\VerificationMethod;
+use JincorTech\VerifyClient\Abstracts\VerificationMethod;
 use JincorTech\VerifyClient\Interfaces\VerifyService;
 use JincorTech\VerifyClient\ValueObjects\VerificationResult;
 
@@ -70,6 +70,7 @@ class VerifyClient implements VerifyService
      *
      * @return VerificationResult
      *
+     * @throws Exception
      * @throws InvalidCodeException
      */
     public function validate(ValidationData $validationData): VerificationResult
@@ -111,5 +112,20 @@ class VerifyClient implements VerifyService
         );
 
         return true;
+    }
+
+    /**
+     * @param string $verificationId
+     * @param string $methodType
+     *
+     * @return VerificationDetails
+     */
+    public function getVerification(string $verificationId, string $methodType): VerificationDetails
+    {
+        $response = $this->httpClient->request('GET', '/methods/'.$methodType.'/verifiers/'.$verificationId);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        return VerificationDetailsCreator::create($methodType, $data);
     }
 }

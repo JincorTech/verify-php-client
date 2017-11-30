@@ -7,6 +7,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use JincorTech\VerifyClient\Abstracts\VerificationMethod;
 use JincorTech\VerifyClient\ValueObjects\EmailValidationData;
 use JincorTech\VerifyClient\ValueObjects\EmailInvalidationData;
 use JincorTech\VerifyClient\ValueObjects\EmailVerificationDetails;
@@ -389,6 +390,54 @@ class VerifyClientCest
                 new GoogleAuthInvalidationData($this->verificationId)
             );
         });
+    }
+
+    public function getVerificationByEmailVerificationResponseCode200(UnitTester $I)
+    {
+        $responseBody = json_encode([
+            'status' => 200,
+            'data' => [
+                'verificationId' => $this->verificationId->getValue(),
+                'expiredOn' => 123456,
+                'consumer' => self::CONSUMER,
+                'payload' => 'payload_data',
+            ]
+        ]);
+
+        $this->addResponseToHandler($responseBody, 200);
+
+
+        $verificationDetails = $this->verifyClient->getVerification(self::VERIFICATION_ID, VerificationMethod::METHOD_EMAIL);
+        $I->assertInstanceOf(EmailVerificationDetails::class, $verificationDetails);
+        $I->assertEquals('200', $verificationDetails->getStatus());
+        $I->assertEquals(self::VERIFICATION_ID, $verificationDetails->getVerificationId());
+        $I->assertEquals(self::VERIFICATION_EXPIRED_ON, $verificationDetails->getExpiredOn());
+        $I->assertEquals(self::CONSUMER, $verificationDetails->getConsumer());
+        $I->assertEquals('payload_data', $verificationDetails->getPayload());
+    }
+
+    public function getVerificationByGoogleAuthVerificationResponseCode200(UnitTester $I)
+    {
+        $responseBody = json_encode([
+            'status' => 200,
+            'data' => [
+                'consumer' => self::CONSUMER,
+                'verificationId' => $this->verificationId->getValue(),
+                'totpUri' => self::VERIFICATION_TOTP_URI,
+                'expiredOn' => 123456,
+            ]
+        ]);
+
+        $this->addResponseToHandler($responseBody, 200);
+
+        $verificationDetails = $this->verifyClient->getVerification(self::VERIFICATION_ID, VerificationMethod::METHOD_GOOGLE_AUTH);
+        $I->assertInstanceOf(GoogleAuthVerificationDetails::class, $verificationDetails);
+        $I->assertEquals('200', $verificationDetails->getStatus());
+        $I->assertEquals(self::VERIFICATION_ID, $verificationDetails->getVerificationId());
+        $I->assertEquals(self::VERIFICATION_EXPIRED_ON, $verificationDetails->getExpiredOn());
+        $I->assertEquals(self::VERIFICATION_TOTP_URI, $verificationDetails->getTotpUri());
+        $I->assertEquals(self::CONSUMER, $verificationDetails->getConsumer());
+        $I->assertEquals('', $verificationDetails->getPayload());
     }
 
     /**
